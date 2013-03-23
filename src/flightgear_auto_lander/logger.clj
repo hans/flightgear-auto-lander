@@ -22,7 +22,10 @@
 (defn flightgear-data []
   {:position (f/position)
    :orientation (f/orientation)
-   :velocities (f/velocities)})
+   :velocities (f/velocities)
+
+   :flight-controls (f/flight-controls)
+   :engine-controls (f/engine-controls)})
 
 (defn add-log
   "Log the current FlightGear state."
