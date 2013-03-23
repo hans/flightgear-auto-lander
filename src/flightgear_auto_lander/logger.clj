@@ -1,7 +1,8 @@
 (ns flightgear-auto-lander.logger
   (:require [monger.core :as m]
             [monger.collection :as mc]
-            [flightgear.api :as f]))
+            [flightgear.api :as f])
+  (:import [java.util.concurrent Executors TimeUnit]))
 
 (def *mongodb-db-name* "flightgear-log")
 (def *mongodb-document-name* "log")
@@ -32,3 +33,18 @@
   []
 
   (mc/insert *mongodb-document-name* (flightgear-data)))
+
+(defn run-on-interval [fn msecs]
+  (let [executor (Executors/newScheduledThreadPool 1)]
+    (.scheduleAtFixedRate executor fn 0 msecs TimeUnit/MILLISECONDS)
+    executor))
+
+(def *log-interval* 250)
+(def ^:dynamic *log-executor* nil)
+
+(defn start-logging [interval]
+  (def *log-executor* (run-on-interval add-log interval)))
+
+(defn stop-logging []
+  (when (not (nil? *log-executor*))
+    (.shutdownNow *log-executor*)))
