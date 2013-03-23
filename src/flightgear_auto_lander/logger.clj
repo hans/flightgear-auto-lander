@@ -1,5 +1,6 @@
 (ns flightgear-auto-lander.logger
   (:require [monger.core :as m]
+            [monger.collection :as mc]
             [flightgear.api :as f]))
 
 (def *mongodb-db-name* "flightgear-log")
